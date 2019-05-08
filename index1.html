@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于bootstrup的jQuery多级列表树插件</title>
+    <link href="http://www.jq22.com/jquery/bootstrap-3.3.4.css" rel="stylesheet">
+    <style type="text/css">
+        .jq22-header{margin-bottom: 15px;font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", "FontAwesome", sans-serif;}
+        .jq22-icon{color: #fff;}
+    </style>
+    <!--[if IE]>
+    <script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="jq22-container">
+
+    <div class="container">
+        <h1>Bootstrap Tree View</h1>
+        <br>
+        <div class="row">
+            <hr>
+            <h2>Data</h2>
+            <div class="col-sm-4">
+                <h2>JSON Data</h2>
+                <div id="treeview12" class=""></div>
+            </div>
+            <!--<div class="col-sm-4">-->
+            <!--<h2></h2>-->
+            <!--<div id="treeview13" class=""></div>-->
+            <!--</div>-->
+            <!--<div class="col-sm-4">-->
+            <!--<h2></h2>-->
+            <!--<div id="treeview14"></div>-->
+            <!--</div>-->
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+    </div>
+
+
+</div>
+
+<script src="http://www.jq22.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="js/bootstrap-treeview.js"></script>
+<script type="text/javascript">
+
+    $(function() {
+
+//        var json = '[' +
+//                '{' +
+//                '"text": "Parent 1",' +
+//                '"nodes": [' +
+//                '{' +
+//                '"text": "Child 1",' +
+//                '"nodes": [' +
+//                '{' +
+//                '"text": "Grandchild 1"' +
+//                '},' +
+//                '{' +
+//                '"text": "Grandchild 2"' +
+//                '}' +
+//                ']' +
+//                '},' +
+//                '{' +
+//                '"text": "Child 2"' +
+//                '}' +
+//                ']' +
+//                '},' +
+//                '{' +
+//                '"text": "Parent 2"' +
+//                '},' +
+//                '{' +
+//                '"text": "Parent 3"' +
+//                '},' +
+//                '{' +
+//                '"text": "Parent 4"' +
+//                '},' +
+//                '{' +
+//                '"text": "Parent 5"' +
+//                '}' +
+//                ']';
+//
+//        var $tree = $('#treeview12').treeview({
+//            data: json
+//        });
+
+
+//        登陆
+            $('.goLogin').click(function () {
+                window.location.href = 'login.ftl';
+            });
+            var json = [
+                {
+                    "tags": 0, "text": "根目录", "id": 0,
+                    "nodes": [
+                        {
+                            "tags": 1, "id": 1, "text": "听障", "sort": 1,
+                            "nodes": [
+                                {
+                                    "tags": 2, "id": 2, "text": "构音部位", "sort": 1,
+                                    "nodes": [{
+                                        "tags": 3, "id": 3, "text": "唇音", "sort": 1, state: {
+
+                                            expanded: true,
+
+                                        },
+                                        "nodes": [{
+                                            "tags": 4, "id": 4, "text": "b", "sort": 1,
+                                            "nodes": [
+                                                {"tags": 5, "id": 5, "text": "开口", "sort": 1,},
+                                                {"tags": 6, "id": 6, "text": "开口1", "sort": 1,}
+                                            ],
+                                        }],
+                                    }],
+                                },
+                                {
+                                    "tags": 2,
+                                    "id": 17,
+                                    "text": "testaa",
+                                    "sort": 12,
+                                    "description": "",
+                                    "pid": 1,
+                                    "code": "12",
+                                    "type": "域",
+                                    "isEnabled": 0
+                                }
+                            ],
+                        },
+                        {
+                            "tags": 1, "id": 8, "text": "SLI", "sort": 2,
+                            "nodes": [{
+                                "tags": 2,
+                                "id": 10,
+                                "text": "test2",
+                                "sort": 2,
+                                "description": "123",
+                                "pid": 8,
+                                "code": "01",
+                                "type": "域",
+                                "isEnabled": 0
+                            }],
+                        }],
+                }
+            ]
+
+            var $tree = $('#treeview12').treeview({
+                data: json,
+                onNodeSelected: function (event, data) {
+//              console.log($('event').text())
+//                console.log(event)
+                    console.log(data.text)
+                    console.log(data.id)
+                }
+            });
+//        $('#treeview12').treeview('expandNode', [ 3, { levels: 3, silent: true } ]);
+            $('#treeview12').treeview('revealNode', [6, {silent: true,}]);
+
+            $('#treeview12 li').on('click', function () {
+                var a = $('#treeview12 li.node-selected').text();
+                console.log(a);
+                var b = $('#treeview12 li.node-selected').attr('data-nodeid');
+                console.log(b)
+
+            })
+
+    });
+</script>
+</body>
+</html>

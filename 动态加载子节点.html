@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于bootstrup的jQuery多级列表树插件</title>
+    <link href="http://www.jq22.com/jquery/bootstrap-3.3.4.css" rel="stylesheet">
+    <style type="text/css">
+        .jq22-header{margin-bottom: 15px;font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", "FontAwesome", sans-serif;}
+        .jq22-icon{color: #fff;}
+    </style>
+    <!--[if IE]>
+    <script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="jq22-container">
+
+    <div class="container">
+        <h1>Bootstrap Tree View</h1>
+        <br>
+        <div class="row">
+            <hr>
+            <h2>Data</h2>
+            <div class="col-sm-4">
+                <h2>JSON Data</h2>
+                <div id="treeview12" class=""></div>
+            </div>
+            <!--<div class="col-sm-4">-->
+            <!--<h2></h2>-->
+            <!--<div id="treeview13" class=""></div>-->
+            <!--</div>-->
+            <!--<div class="col-sm-4">-->
+            <!--<h2></h2>-->
+            <!--<div id="treeview14"></div>-->
+            <!--</div>-->
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+    </div>
+
+
+</div>
+
+<script src="http://www.jq22.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="js/bootstrap-treeview1.js"></script>
+<!--bootstrap-treeview1.js 是修改过的支持动态加载子节点的插件-->
+<!--bootstrap-treeview1.js  是原本的不支持动态加载子节点-->
+<script type="text/javascript">
+
+    $(function() {
+//        treeview需要的数据格式
+//
+//        comId为自己定义的
+//
+//        var tree =[{text:节点1,nodes[{text:节点1的儿子1},{text:节点1的儿子2}]},{text:节点2},{text:节点3,comId:item.id}]；
+        var data = new FormData();
+        var  url=baseURL + 'company/companyinfo/getCmpListByStep';
+        $.ajax({
+            type: "post",
+            url: url,
+            processData: false,  // 告诉jQuery不要去处理发送的数据
+            contentType: false,  // 告诉jQuery不要去设置Content-Type请求头
+            data:data,
+            success: function(r){
+                if(r.code == 0){
+                    var tree = new Array();
+                    $.each( r.data,function(index, item){
+                        tree[index]={text:item.name,comId:item.id};
+                    })
+                    $('#tree').treeview({
+                        data: tree, //节点数据
+                        onNodeSelected: function (event, node) {//选中节点时调用的方法
+                            vm.getChildCom(node.comId,node.nodeId);//这里通过vue.js调用查询子节点的数据
+                        },
+                        emptyIcon: "glyphicon glyphicon-plus"//设置图标样式
+                    })
+                }else{
+                    alert(r.msg);
+                }
+            }
+        });
+
+        //获取子节点
+        getChildCom:function(cmpId,nodeId){
+            if(typeof($('#tree').treeview('getSelected')[0].nodes) != "undefined" ){
+//这里判断当前节点下是否有值了，有就不再添加数据return防止重复添加
+//$('#tree').treeview('getSelected')取得当前选中的数据
+                if($('#tree').treeview('getSelected')[0].nodes.length>0)  {
+                    return;
+                }
+            }
+            var data={cmpId:cmpId}
+            $.ajax({
+                processData: false,  // 告诉jQuery不要去处理发送的数据
+                contentType: false,  // 告诉jQuery不要去设置Content-Type请求头
+                type: "POST",
+                url: baseURL + "company/companyinfo/getCmpListByStep",
+                dataType: "json",
+                data: data,
+                success: function (r) {
+                    if(r.code == 0) {
+                        $.each(r.data, function (index, item) {
+                            var addNodes = new Array();
+                            addNodes[0] = nodeId;
+                            addNodes[1] = {node: {text: item.name, comId: item.id}};
+                            $("#tree").treeview("addNode", addNodes);
+                        });
+                    }
+                }
+            });
+        }
+
+    });
+</script>
+</body>
+</html>
